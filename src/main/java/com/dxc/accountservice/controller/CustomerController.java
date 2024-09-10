@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/customer")
+@RequestMapping("/customers")
 @RestController
 public class CustomerController {
 
     @GetMapping
-    @RequestMapping("/customers")
     public List<Customer> listaCliente() {
         List<Customer> listaClientes = List.of(new Customer(1L, "Pedro", "Pedro@gmail.com"),
                 new Customer(1L, "Ricardo", "Ricardo@gmail.com"),
@@ -21,7 +20,7 @@ public class CustomerController {
         return listaClientes;
     }
 
-    @GetMapping
+    @GetMapping("/saludo")
     public String saludoCliente() {
         return "¡Saludos!";
     }

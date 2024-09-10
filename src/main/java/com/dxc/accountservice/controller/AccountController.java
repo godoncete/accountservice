@@ -14,53 +14,16 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
-
     @GetMapping
     public List<Account> listarCuentas() {
         return accountService.listarCuentas();
     }
 
-    @GetMapping
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public Account obtenerCuentaPorId(@PathVariable Long id) {
         return accountService.obtenerCuentaPorId(id);
     }
 
-    @PostMapping
-    @RequestMapping("/{account}")
-    public Account crearCuenta(@RequestParam Account account) {
-        return accountService.crearCuenta(account);
-    }
-
-    @PutMapping
-    @RequestMapping("/{account}")
-    public Account actualizarCuenta(@PathVariable Account account) {
-        return accountService.actualizarCuenta(account);
-    }
-
-    @DeleteMapping
-    @RequestMapping("/{id}")
-    public boolean eliminarCuenta(@PathVariable Long id) {
-        return accountService.eliminarCuenta(id);
-    }
-
-    @PostMapping
-    @RequestMapping("/{account}/{amount}/{customer}")
-    public boolean addMoneyToBalance(@PathVariable Account account, @PathVariable int amount, @PathVariable Customer customer) {
-        return accountService.addMoneyToBalance(account, amount, customer);
-    }
-
-    @GetMapping
-    @RequestMapping("/rest/{account}/{amount}/{customer}")
-    public boolean restMoneyToBalance(@PathVariable Account account, @PathVariable int amount, @PathVariable Customer customer) {
-        return accountService.addMoneyToBalance(account, amount, customer);
-    }
-
-    @DeleteMapping
-    @RequestMapping("/{customer}")
-    public boolean eliminarCuentasPorCliente(@PathVariable Customer customer) {
-        return accountService.eliminarCuentasPorCliente(customer);
-    }
 
 
 }
