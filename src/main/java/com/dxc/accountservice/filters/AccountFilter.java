@@ -2,13 +2,11 @@ package com.dxc.accountservice.filters;
 
 import org.springframework.stereotype.Component;
 
-
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogRecord;
 
 @Component
 public class AccountFilter implements Filter {
@@ -24,13 +22,12 @@ public class AccountFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-//            logger.info("Filtrando 2..."+ servletRequest.getLocalAddr()+"::"+servletRequest.getRemoteHost());
-                String ip_ = servletRequest.getLocalAddr();
-                boolean isOk = ips.stream().filter(ip -> ip_.equals(ip)).findFirst().isPresent();
-                if (!isOk) {
-                    ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    return;
-                }
+        String ip_ = servletRequest.getLocalAddr();
+        boolean isOk = ips.stream().filter(ip -> ip_.equals(ip)).findFirst().isPresent();
+        if (!isOk) {
+            ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
