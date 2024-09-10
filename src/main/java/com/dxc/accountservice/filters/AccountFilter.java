@@ -25,17 +25,12 @@ public class AccountFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        logger.info("pasa1");
         String ip_ = servletRequest.getLocalAddr();
-        logger.info("ip host: " + ip_);
-        logger.info(getRemoteAddr((HttpServletRequest)servletRequest));
         boolean isOk = ips.stream().filter(ip -> ip_.equals(ip)).findFirst().isPresent();
         if (!isOk) {
-            logger.info("fuera");
             ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        logger.info("pasa2");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
