@@ -28,13 +28,13 @@ public class AccountController {
     }
 
     @PostMapping
-    @RequestMapping
+    @RequestMapping("/{account}")
     public Account crearCuenta(@PathVariable Account account) {
         return accountService.crearCuenta(account);
     }
 
     @PutMapping
-    @RequestMapping
+    @RequestMapping("/{account}")
     public Account actualizarCuenta(@PathVariable Account account) {
         return accountService.actualizarCuenta(account);
     }
@@ -52,14 +52,14 @@ public class AccountController {
     }
 
     @GetMapping
-    @RequestMapping("rest/{account}/{amount}/{customer}")
+    @RequestMapping("/rest/{account}/{amount}/{customer}")
     public boolean restMoneyToBalance(@PathVariable Account account, @PathVariable int amount, @PathVariable Customer customer) {
         return accountService.addMoneyToBalance(account, amount, customer);
     }
 
     @DeleteMapping
     @RequestMapping("/{customer}")
-    public boolean eliminarCuentasPorCliente(@PathVariable Customer customer){
+    public boolean eliminarCuentasPorCliente(@PathVariable Customer customer) {
         return accountService.eliminarCuentasPorCliente(customer);
     }
 
