@@ -3,6 +3,7 @@ package com.dxc.accountservice.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "cuenta")
+@Table(name = "accounts")
 public class Account {
 
 
@@ -20,9 +21,12 @@ public class Account {
 
     private String type;
 
+    @Column(name = "opening_date")
+    private LocalDate  openingDate;
+
     private int balance;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "owner_id")
     private Customer customer;
 }

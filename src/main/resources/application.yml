@@ -25,7 +25,7 @@ spring:
 server:
   port: 9900
 
-debug: true
+#debug: true
 logging:
   #level.root: DEBUG
   file.path: /var/logs
