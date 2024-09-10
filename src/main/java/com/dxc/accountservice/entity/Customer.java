@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Data
+//@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -20,5 +21,9 @@ public class Customer {
     private String type;
 
     private String email;
+
+    //    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @Transient
+    private List<Account> accounts;
 
 }

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
+//@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -18,10 +18,12 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String type;
 
     private int balance;
 
+//    @ManyToOne
+//    @JoinColumn(name = "account_id")
+    @Transient
     private Customer customer;
 }
