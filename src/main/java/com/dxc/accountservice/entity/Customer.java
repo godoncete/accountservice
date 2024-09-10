@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "customers")
+@Builder
 public class Customer {
 
     @Id

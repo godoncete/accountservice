@@ -82,7 +82,11 @@ public class AccountServiceImpl implements AccountService  {
 
     @Override
     public boolean eliminarCuentasPorCliente(Customer customer) {
-//        List<Account> accounts =
+        List<Account> accounts = accountRepository.findAllByCustomer(customer.getId());
+        if(!accounts.isEmpty()){
+            accountRepository.deleteAll(accounts);
+            return true;
+        }
         return false;
     }
 }

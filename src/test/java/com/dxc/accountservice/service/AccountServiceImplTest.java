@@ -1,6 +1,7 @@
 package com.dxc.accountservice.service;
 
 import com.dxc.accountservice.entity.Account;
+import com.dxc.accountservice.entity.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,5 +50,9 @@ class AccountServiceImplTest {
 
     @Test
     void eliminarCuentasPorCliente() {
+        Customer customer = Customer.builder().id(1L).build();
+        boolean deleted = accountService.eliminarCuentasPorCliente(customer);
+        System.out.println("Deleted: " + deleted);
+        assert deleted;
     }
 }
