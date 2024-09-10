@@ -1,6 +1,6 @@
 spring:
   application.name: accountservice
-  profiles.active: dev
+  profiles.active: prod
 
 ---
 spring:
@@ -36,7 +36,7 @@ spring:
   config.activate.on-profile: prod
   sql.init.mode: never
   datasource:
-    url: "jdcb:mysql://localhost:3306/accounts_db"
+    url: "jdbc:mysql://localhost/accounts_db"
     driverClassName: com.mysql.cj.jdbc.Driver
     username: account_user
     password: acc123
@@ -53,4 +53,4 @@ server:
   port: 9943
   servlet.context-path: /api/v1
 
-logging.level.root: ERROR
+logging.level.root: error
