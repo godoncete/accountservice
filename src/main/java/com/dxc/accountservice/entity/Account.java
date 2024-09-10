@@ -1,11 +1,11 @@
 package com.dxc.accountservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
 //@Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +22,7 @@ public class Account {
 
     private int balance;
 
-//    @ManyToOne
-//    @JoinColumn(name = "account_id")
-    @Transient
+    @ManyToOne
+    @JoinColumn(name = "account_id")
     private Customer customer;
 }

@@ -1,12 +1,12 @@
 package com.dxc.accountservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
 //@Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +22,7 @@ public class Customer {
 
     private String email;
 
-    //    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    @Transient
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Account> accounts;
 
 }
