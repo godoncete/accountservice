@@ -15,12 +15,12 @@ public interface AccountService {
 
     Account actualizarCuenta(Account cuenta);
 
-    void eliminarCuenta(Long id);
+    boolean eliminarCuenta(Long id);
 
-    void addMoneyToBalance(Account account, double amount, Customer customerId);
+    boolean addMoneyToBalance(Account account, int amount, Customer customer);
 
-    void restMoneyToBalance(Account account, double amount, Customer customerId);
+    boolean restMoneyToBalance(Account account, int amount, Customer customer);
 
-    void eliminarCuentasPorCliente(Customer customer);
+    boolean eliminarCuentasPorCliente(Customer customer);
 
 }

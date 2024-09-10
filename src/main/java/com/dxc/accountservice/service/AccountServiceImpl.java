@@ -3,6 +3,7 @@ package com.dxc.accountservice.service;
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
 import com.dxc.accountservice.repository.AccountRepository;
+import com.dxc.accountservice.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ public class AccountServiceImpl implements AccountService  {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Override
     public List<Account> listarCuentas() {
@@ -32,31 +35,54 @@ public class AccountServiceImpl implements AccountService  {
 
     @Override
     public Account crearCuenta(Account cuenta) {
-        return null;
+        return accountRepository.save(cuenta);
     }
 
     @Override
     public Account actualizarCuenta(Account cuenta) {
+        if(accountRepository.existsById(cuenta.getId())){
+            return accountRepository.save(cuenta);
+        }
         return null;
     }
 
     @Override
-    public void eliminarCuenta(Long id) {
-
+    public boolean eliminarCuenta(Long id) {
+        if(accountRepository.existsById(id)){
+            accountRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void addMoneyToBalance(Account account, double amount, Customer customerId) {
-
+    public boolean addMoneyToBalance(Account account, int amount, Customer customer) {
+     //Aquí se haría la lógica para añadir dinero a la cuenta del cliente
+        if(accountRepository.existsById(account.getId()) && amount > 0){
+            if(customerRepository.existsById(customer.getId())){
+                account.setBalance(account.getBalance() + amount);
+                accountRepository.save(account);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public void restMoneyToBalance(Account account, double amount, Customer customerId) {
-
+    public boolean restMoneyToBalance(Account account, int amount, Customer customer) {
+        if(accountRepository.existsById(account.getId()) && amount > 0){
+            if(customerRepository.existsById(customer.getId())){
+                account.setBalance(account.getBalance() - amount);
+                accountRepository.save(account);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public void eliminarCuentasPorCliente(Customer customer) {
-
+    public boolean eliminarCuentasPorCliente(Customer customer) {
+//        List<Account> accounts =
+        return false;
     }
 }
