@@ -4,7 +4,6 @@ import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
 import com.dxc.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class AccountController {
 
     @PostMapping
     @RequestMapping("/{account}")
-    public Account crearCuenta(@PathVariable Account account) {
+    public Account crearCuenta(@RequestParam Account account) {
         return accountService.crearCuenta(account);
     }
 
