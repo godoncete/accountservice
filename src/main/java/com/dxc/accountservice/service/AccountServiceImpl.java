@@ -6,6 +6,7 @@ import com.dxc.accountservice.repository.AccountRepository;
 import com.dxc.accountservice.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +21,13 @@ public class AccountServiceImpl implements AccountService  {
     private CustomerRepository customerRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Account> listarCuentas() {
         return accountRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Account obtenerCuentaPorId(Long id) {
         Optional<Account> cuenta = accountRepository.findById(id);
         if(cuenta.isPresent()){
@@ -34,11 +37,13 @@ public class AccountServiceImpl implements AccountService  {
     }
 
     @Override
+    @Transactional
     public Account crearCuenta(Account cuenta) {
         return accountRepository.save(cuenta);
     }
 
     @Override
+    @Transactional
     public Account actualizarCuenta(Account cuenta) {
         if(accountRepository.existsById(cuenta.getId())){
             return accountRepository.save(cuenta);
@@ -56,6 +61,7 @@ public class AccountServiceImpl implements AccountService  {
     }
 
     @Override
+    @Transactional
     public boolean addMoneyToBalance(Account account, int amount, Customer customer) {
      //Aquí se haría la lógica para añadir dinero a la cuenta del cliente
         if(accountRepository.existsById(account.getId()) && amount > 0){
@@ -69,6 +75,7 @@ public class AccountServiceImpl implements AccountService  {
     }
 
     @Override
+    @Transactional
     public boolean restMoneyToBalance(Account account, int amount, Customer customer) {
         if(accountRepository.existsById(account.getId()) && amount > 0){
             if(customerRepository.existsById(customer.getId())){

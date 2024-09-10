@@ -1,6 +1,6 @@
 spring:
   application.name: accountservice
-  profiles.active: prod
+  profiles.active: dev
 
 ---
 spring:

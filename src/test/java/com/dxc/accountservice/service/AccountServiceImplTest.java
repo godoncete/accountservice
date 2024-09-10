@@ -2,7 +2,10 @@ package com.dxc.accountservice.service;
 
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -10,12 +13,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AccountServiceImplTest {
 
     @Autowired
     private AccountService accountService;
 
     @Test
+    @Order(1)
     void listarCuentas() {
         List<Account> accounts = accountService.listarCuentas();
         System.out.println(accounts);
@@ -23,6 +28,7 @@ class AccountServiceImplTest {
     }
 
     @Test
+    @Order(2)
     void obtenerCuentaPorId() {
         Account account = accountService.obtenerCuentaPorId(1L);
         System.out.println(account);
@@ -30,6 +36,7 @@ class AccountServiceImplTest {
     }
 
     @Test
+    @Order(4)
     void crearCuenta() {
         Account account = Account.builder()
                 .customer(Customer.builder().id(1L).build())
@@ -40,10 +47,10 @@ class AccountServiceImplTest {
         Account accountCreated = accountService.crearCuenta(account);
         System.out.println(accountCreated);
         assert accountCreated != null;
-
     }
 
     @Test
+    @Order(5)
     void actualizarCuenta() {
         Account account = Account.builder()
                 .id(1L)
@@ -57,6 +64,7 @@ class AccountServiceImplTest {
     }
 
     @Test
+    @Order(6)
     void eliminarCuenta() {
         boolean deleted = accountService.eliminarCuenta(1L);
         System.out.println("Deleted: " + deleted);
@@ -64,14 +72,17 @@ class AccountServiceImplTest {
     }
 
     @Test
+    @Order(7)
     void addMoneyToBalance() {
     }
 
     @Test
+    @Order(8)
     void restMoneyToBalance() {
     }
 
     @Test
+    @Order(9)
     void eliminarCuentasPorCliente() {
         Customer customer = Customer.builder().id(1L).build();
         boolean deleted = accountService.eliminarCuentasPorCliente(customer);
