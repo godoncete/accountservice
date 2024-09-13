@@ -26,6 +26,7 @@ public class AccountServiceImpl implements AccountService  {
     public List<AccountDtoResponse> listarCuentasCliente(Long customerId){
         Customer customer = customerRepository.findById(customerId).orElse(null);
         if(customer != null){
+            
             return accountRepository.findAllByCustomer(customer);
         }
 
