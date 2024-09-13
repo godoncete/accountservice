@@ -13,12 +13,13 @@ public interface AccountService {
     AccountDtoResponse getByAccountIdAndCustomerId(Long accountId, Long customerId);
     List<AccountDtoResponse> listarCuentasCliente(Long customerId);
     AccountDtoResponse crearCuenta(AccountDtoRequest accountDtoRequest);
+    AccountDtoResponse actualizarCuenta(AccountDtoRequest accountDtoRequest, Long accountId);
 
     Account obtenerCuentaPorId(Long id);
 
 
 
-    Account actualizarCuenta(Account cuenta);
+
 
     boolean eliminarCuenta(Long id);
 

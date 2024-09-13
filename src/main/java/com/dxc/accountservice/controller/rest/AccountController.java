@@ -6,6 +6,7 @@ import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
 import com.dxc.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +33,21 @@ public class AccountController {
     @PostMapping
     public AccountDtoResponse crearCuenta(@Valid @RequestBody AccountDtoRequest account) {
         return accountService.crearCuenta(account);
+    }
+
+    @PutMapping("/{accountId}"  )
+    public ResponseEntity<AccountDtoResponse> actualizarCuenta(@PathVariable Long accountId,
+                                                               @Valid @RequestBody AccountDtoRequest account) {
+        return ResponseEntity.ok(accountService.actualizarCuenta(account, accountId));
+    }
+
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity<Boolean> eliminarCuenta(@PathVariable Long customerId) {
+        return  ResponseEntity.ok(accountService.eliminarCuenta(customerId));
+    }
+
+    @PostMapping("/add-money")
+    public AccountDtoResponse addMoneyToBalance(@Valid @RequestBody AccountDtoRequest accountDtoRequest) {
+        return accountService.crearCuenta(accountDtoRequest);
     }
 }
