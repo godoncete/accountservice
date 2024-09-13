@@ -3,6 +3,7 @@ package com.dxc.accountservice.controller.handler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,4 +41,12 @@ public class GlobalExceptionHandlerAccount {
 
     }
 
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ResponseEntity<String> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+
+        return new ResponseEntity<>("path Http request no existe: " + e.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
+
+    }
 }
