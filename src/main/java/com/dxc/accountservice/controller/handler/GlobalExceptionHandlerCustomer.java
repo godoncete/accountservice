@@ -44,6 +44,4 @@ public class GlobalExceptionHandlerCustomer {
         return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
 
     }
-
-
 }
