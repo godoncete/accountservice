@@ -6,6 +6,7 @@ import com.dxc.accountservice.dto.AddAmountBalanceDto;
 import com.dxc.accountservice.dto.RestMoneyBalanceDto;
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.exception.CustomerNotfoundException;
 import com.dxc.accountservice.mapper.AccountMapper;
 import com.dxc.accountservice.repository.AccountRepository;
@@ -51,25 +52,58 @@ public class AccountServiceImpl implements AccountService  {
     }
 
     @Override
-    public boolean eliminarCuenta(Long id) {
-        if(customerRepository.existsById(id)){
-            accountRepository.deleteById(id);
+    public boolean eliminarCuenta(Long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
+        if(customer!= null){
+            List<Account> accounts = accountRepository.findAllByCustomer(customer);
+            accountRepository.deleteAll(accounts);
             return true;
         }
         return false;
     }
 
+    @Override
+    @Transactional
+    public boolean addMoneyToBalance(AddAmountBalanceDto addAmountBalanceDto) {
+        Optional<Account> account = accountRepository.findById(addAmountBalanceDto.getAccountId());
+       if(account.isPresent()){
+           if(customerRepository.existsById(addAmountBalanceDto.getCustomerId())){
+               account.get().setBalance(account.get().getBalance() + addAmountBalanceDto.getAmount());
+               accountRepository.save(account.get());
+               return true;
+           }
+           throw new CustomerNotfoundException("Customer not found with id: " + addAmountBalanceDto.getCustomerId());
+       }
+       throw new AccountNotFoundException("Account not found with id: " + addAmountBalanceDto.getAccountId());
+    }
 
+    @Override
+    @Transactional
+    public boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto) {
+        Account account = accountRepository.findById(restMoneyBalanceDto.getAccountId()).orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + restMoneyBalanceDto.getAccountId()  ));
+        if(account != null && account.getBalance() >= restMoneyBalanceDto.getAmount() ){
+            if(customerRepository.existsById(restMoneyBalanceDto.getCustomerId())){
+                    account.setBalance(account.getBalance() - restMoneyBalanceDto.getAmount());
+                    accountRepository.save(account);
+                    return true;
+            }
+            throw new CustomerNotfoundException("Account not found with id: " + restMoneyBalanceDto.getAccountId());
+        }
+        throw new RuntimeException("Insufficient balance in account with id: " + restMoneyBalanceDto.getAccountId());
+    }
 
+    @Override
+    public String comprobarPrestamo(Long customerId,Integer monto) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
+        Integer totalBalance = accountRepository.findAllByCustomer(customer).stream().mapToInt(Account::getBalance).sum();
+        Integer calculadoPrestamo = Math.toIntExact(Math.round(totalBalance * 0.8));
 
+        if(monto < calculadoPrestamo){
+            return "El cliente " + customer.getName() + " puede solicitar el prestamo";
+        }
 
-
-
-
-
-
-
-
+        return "El cliente " + customer.getName() + " NO puede solicitar el prestamo";
+    }
 
 
     @Override
@@ -80,36 +114,6 @@ public class AccountServiceImpl implements AccountService  {
             return cuenta.get();
         }
         return null;
-    }
-    @Override
-    @Transactional
-    public boolean addMoneyToBalance(AddAmountBalanceDto addAmountBalanceDto) {
-     //Aquí se haría la lógica para añadir dinero a la cuenta del cliente
-        if(accountRepository.existsById(addAmountBalanceDto.getAccountId())){
-            if(customerRepository.existsById(addAmountBalanceDto.getCustomerId())){
-                Account account = accountRepository.findById(addAmountBalanceDto.getAccountId()).get();
-                account.setBalance(account.getBalance() + addAmountBalanceDto.getAmount());
-                accountRepository.save(account);
-                return true;
-            }
-            throw new CustomerNotfoundException("Customer not found with id: " + addAmountBalanceDto.getCustomerId());
-        }
-        throw new RuntimeException("Account not found with id: " + addAmountBalanceDto.getAccountId());
-    }
-    @Override
-    @Transactional
-    public boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto) {
-        Account account = accountRepository.findById(restMoneyBalanceDto.getAccountId()).orElseThrow();
-        if(account != null){
-            if(customerRepository.existsById(restMoneyBalanceDto.getCustomerId())){
-                if(account.getBalance() >= restMoneyBalanceDto.getAmount()){
-
-                }
-                return true;
-            }
-            throw new CustomerNotfoundException("Customer not found with id: " + restMoneyBalanceDto.getCustomerId());
-        }
-        throw new RuntimeException("Account not found with id: " + restMoneyBalanceDto.getAccountId());
     }
 
 

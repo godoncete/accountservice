@@ -15,18 +15,6 @@ import java.util.HashMap;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleP(ProductNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleU(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-     @ExceptionHandler(UsuarioNotFoundException.class)
-    public ResponseEntity<String> handleU(UsuarioNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException e) {

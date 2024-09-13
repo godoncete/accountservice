@@ -18,6 +18,7 @@ public interface AccountService {
     AccountDtoResponse actualizarCuenta(AccountDtoRequest accountDtoRequest, Long accountId);
     boolean addMoneyToBalance(AddAmountBalanceDto addAmountBalanceDto);
     boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto);
+    String comprobarPrestamo(Long customerId,Integer monto);
 
 
 
