@@ -31,13 +31,13 @@ public class AccountController {
     }
 
     @GetMapping("/{accountId}/{customerId}")
-    public AccountDtoResponse obtenerCuentaPorId(@Positive @PathVariable Long accountId, @Positive @PathVariable Long customerId) {
-        return accountService.getByAccountIdAndCustomerId(accountId,customerId);
+    public ResponseEntity<AccountDtoResponse> obtenerCuentaPorId(@Positive @PathVariable Long accountId, @Positive @PathVariable Long customerId) {
+        return ResponseEntity.ok(accountService.getByAccountIdAndCustomerId(accountId,customerId));
     }
 
     @PostMapping
-    public AccountDtoResponse crearCuenta(@Valid @RequestBody AccountDtoRequest account) {
-        return accountService.crearCuenta(account);
+    public ResponseEntity<AccountDtoResponse> crearCuenta(@Valid @RequestBody AccountDtoRequest account) {
+        return ResponseEntity.ok(accountService.crearCuenta(account));
     }
 
     @PutMapping("/{accountId}"  )
@@ -59,8 +59,9 @@ public class AccountController {
     public ResponseEntity<Boolean> addMoneyToBalance(@Valid @RequestBody RestMoneyBalanceDto restMoneyBalanceDto) {
         return ResponseEntity.ok(accountService.restMoneyToBalance(restMoneyBalanceDto));
     }
+
     @GetMapping("/comprobar-prestamo/{customerId}/{monto}")
-    public ResponseEntity<String> comprobarPrestamo(@PathVariable Long customerId, @PathVariable Integer monto) {
+    public ResponseEntity<String> comprobarPrestamo(@Positive @PathVariable Long customerId,@Positive @PathVariable Integer monto) {
         return ResponseEntity.ok(accountService.comprobarPrestamo(customerId,monto));
     }
 }
