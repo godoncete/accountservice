@@ -1,7 +1,9 @@
 package com.dxc.accountservice.service;
 
+import com.dxc.accountservice.dto.AccountDtoResponse;
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.exception.CustomerNotfoundException;
 import com.dxc.accountservice.repository.AccountRepository;
 import com.dxc.accountservice.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,34 @@ public class AccountServiceImpl implements AccountService  {
     private CustomerRepository customerRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Account> listarCuentas() {
-        return accountRepository.findAll();
+    public List<AccountDtoResponse> listarCuentasCliente(Long customerId){
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if(customer != null){
+            return accountRepository.findAllByCustomer(customer);
+        }
+
+        throw new CustomerNotfoundException("Customer not found with id: " + customerId);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     @Transactional(readOnly = true)

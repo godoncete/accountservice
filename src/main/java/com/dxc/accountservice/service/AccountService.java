@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AccountService {
 
-    List<Account> listarCuentas();
+    List<Account> listarCuentasCliente(Long customerId);
 
     Account obtenerCuentaPorId(Long id);
 
