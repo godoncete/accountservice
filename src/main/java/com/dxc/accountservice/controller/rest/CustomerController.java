@@ -1,4 +1,4 @@
-package com.dxc.accountservice.controller;
+package com.dxc.accountservice.controller.rest;
 
 import com.dxc.accountservice.entity.Customer;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.dxc.accountservice.controller;
+package com.dxc.accountservice.controller.rest;
 
 import com.dxc.accountservice.dto.AccountDtoRequest;
 import com.dxc.accountservice.dto.AccountDtoResponse;
