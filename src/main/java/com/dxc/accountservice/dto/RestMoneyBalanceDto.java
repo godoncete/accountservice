@@ -12,9 +12,6 @@ import javax.validation.constraints.Positive;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@NotBlank
-@NotNull
-@Positive
 public class RestMoneyBalanceDto {
     private Integer amount;
     private Long accountId;

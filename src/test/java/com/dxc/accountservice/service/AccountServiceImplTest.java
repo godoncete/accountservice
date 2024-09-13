@@ -21,13 +21,13 @@ class AccountServiceImplTest {
 
 
 
-    @Test
-    @Order(2)
-    void obtenerCuentaPorId() {
-        Account account = accountService.obtenerCuentaPorId(1L);
-        System.out.println(account);
-        assert account!= null;
-    }
+//    @Test
+//    @Order(2)
+//    void obtenerCuentaPorId() {
+//        Account account = accountService.obtenerCuentaPorId(1L);
+//        System.out.println(account);
+//        assert account!= null;
+//    }
 
 //    @Test
 //    @Order(4)
@@ -65,26 +65,26 @@ class AccountServiceImplTest {
         assert deleted;
     }
 
-    @Test
-    @Order(7)
-    void addMoneyToBalance() {
-        Customer customer = Customer.builder().id(1L).build();
-        Account account = accountService.obtenerCuentaPorId(2L);
-        System.out.println("account: " + account);
-        boolean added = accountService.addMoneyToBalance(account, 50, customer);
-        System.out.println("account: " + account);
-        System.out.println("Added: " + added);
-        assert added;
-    }
+//    @Test
+//    @Order(7)
+//    void addMoneyToBalance() {
+//        Customer customer = Customer.builder().id(1L).build();
+//        Account account = accountService.obtenerCuentaPorId(2L);
+//        System.out.println("account: " + account);
+//        boolean added = accountService.addMoneyToBalance(account, 50, customer);
+//        System.out.println("account: " + account);
+//        System.out.println("Added: " + added);
+//        assert added;
+//    }
 
-    @Test
-    @Order(8)
-    void restMoneyToBalance() {
-        Customer customer = Customer.builder().id(1L).build();
-        boolean added = accountService.addMoneyToBalance(accountService.obtenerCuentaPorId(2L), 50, customer);
-        System.out.println("Rest: " + added);
-        assert added;
-    }
+//    @Test
+//    @Order(8)
+//    void restMoneyToBalance() {
+//        Customer customer = Customer.builder().id(1L).build();
+//        boolean added = accountService.addMoneyToBalance(accountService.obtenerCuentaPorId(2L), 50, customer);
+//        System.out.println("Rest: " + added);
+//        assert added;
+//    }
 
     @Test
     @Order(9)

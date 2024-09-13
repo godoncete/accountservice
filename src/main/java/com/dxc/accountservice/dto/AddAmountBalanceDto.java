@@ -2,8 +2,8 @@ package com.dxc.accountservice.dto;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 @Getter
@@ -12,11 +12,15 @@ import javax.validation.constraints.Positive;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@NotBlank
-@NotNull
-@Positive
+
 public class AddAmountBalanceDto {
+    @NotNull
+    @Positive
     private Integer amount;
+    @NotNull
+    @Positive
     private Long accountId;
+    @NotNull
+    @Positive
     private Long customerId;
 }

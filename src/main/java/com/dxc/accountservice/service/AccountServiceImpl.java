@@ -8,6 +8,7 @@ import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
 import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.exception.CustomerNotfoundException;
+import com.dxc.accountservice.exception.InsufficientException;
 import com.dxc.accountservice.mapper.AccountMapper;
 import com.dxc.accountservice.repository.AccountRepository;
 import com.dxc.accountservice.repository.CustomerRepository;
@@ -49,7 +50,9 @@ public class AccountServiceImpl implements AccountService  {
     @Transactional
     public AccountDtoResponse crearCuenta(AccountDtoRequest accountDtoRequest) {
        Account cuenta  = accountMapper.toAccount(accountDtoRequest);
-       return accountMapper.toAccountDtoResponse(accountRepository.save(cuenta));
+       customerRepository.findById(accountDtoRequest.getCustomer().getId())
+               .orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + accountDtoRequest.getCustomer().getId()));
+           return accountMapper.toAccountDtoResponse(accountRepository.save(cuenta));
     }
     @Override
     @Transactional
@@ -96,9 +99,9 @@ public class AccountServiceImpl implements AccountService  {
                     accountRepository.save(account);
                     return true;
             }
-            throw new CustomerNotfoundException("Account not found with id: " + restMoneyBalanceDto.getAccountId());
+            throw new CustomerNotfoundException( "Customer not found with id: " + restMoneyBalanceDto.getCustomerId()  );
         }
-        throw new RuntimeException("Insufficient balance in account with id: " + restMoneyBalanceDto.getAccountId());
+        throw new InsufficientException("Insufficient balance in account with id: " + restMoneyBalanceDto.getAccountId());
     }
 
     @Override
@@ -114,16 +117,6 @@ public class AccountServiceImpl implements AccountService  {
         return "El cliente " + customer.getName() + " NO puede solicitar el prestamo";
     }
 
-
-    @Override
-    @Transactional(readOnly = true)
-    public Account obtenerCuentaPorId(Long id) {
-        Optional<Account> cuenta = accountRepository.findById(id);
-        if(cuenta.isPresent()){
-            return cuenta.get();
-        }
-        return null;
-    }
 
 
     @Override

@@ -20,18 +20,7 @@ public interface AccountService {
     boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto);
     String comprobarPrestamo(Long customerId,Integer monto);
 
-
-
-
-    Account obtenerCuentaPorId(Long id);
-
-
-
-
-
     boolean eliminarCuenta(Long id);
-
-
 
     boolean eliminarCuentasPorCliente(Customer customer);
 

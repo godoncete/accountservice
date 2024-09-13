@@ -1,5 +1,6 @@
 package com.dxc.accountservice.controller.handler;
 
+import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.exception.CustomerNotfoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,22 +12,31 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandlerCustomer {
+public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CustomerNotfoundException.class)
-    public ResponseEntity<String> handleP(CustomerNotfoundException e) {
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<String> handleP(AccountNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
-
-    @ExceptionHandler(IllegalArgumentException.class)
+     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleU(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+     @ExceptionHandler(CustomerNotfoundException.class)
+    public ResponseEntity<String> handleU(CustomerNotfoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleU(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException e) {
+    public ResponseEntity<Map<String,String>> handle(MethodArgumentNotValidException e) {
         var errors = new HashMap<String, String>();
 
         e.getBindingResult().getAllErrors().forEach(error -> {
@@ -34,14 +44,14 @@ public class GlobalExceptionHandlerCustomer {
             String message = error.getDefaultMessage();
             errors.put(fieldName, message);
         });
-        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(new ErrorResponse(errors));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
-
-        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-
-    }
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
+//
+//        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+//
+//    }
 }

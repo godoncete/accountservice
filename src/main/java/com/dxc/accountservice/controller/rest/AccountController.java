@@ -4,11 +4,9 @@ import com.dxc.accountservice.dto.AccountDtoRequest;
 import com.dxc.accountservice.dto.AccountDtoResponse;
 import com.dxc.accountservice.dto.AddAmountBalanceDto;
 import com.dxc.accountservice.dto.RestMoneyBalanceDto;
-import com.dxc.accountservice.entity.Account;
-import com.dxc.accountservice.entity.Customer;
+
 import com.dxc.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +34,8 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountDtoResponse> crearCuenta(@Valid @RequestBody AccountDtoRequest account) {
-        return ResponseEntity.ok(accountService.crearCuenta(account));
+    public ResponseEntity<AccountDtoResponse> crearCuenta(@Valid @RequestBody  AccountDtoRequest AccountDtoRequest) {
+        return ResponseEntity.ok(accountService.crearCuenta(AccountDtoRequest));
     }
 
     @PutMapping("/{accountId}"  )
