@@ -21,10 +21,11 @@ public class AccountServiceImpl implements AccountService  {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
     private AccountMapper accountMapper;
 
-    @Autowired
-    private CustomerRepository customerRepository;
+
 
     @Override
     public List<AccountDtoResponse> listarCuentasCliente(Long customerId){
@@ -38,9 +39,23 @@ public class AccountServiceImpl implements AccountService  {
        Account cuenta  = accountMapper.toAccount(accountDtoRequest);
        return accountMapper.toAccountDtoResponse(accountRepository.save(cuenta));
     }
+    @Override
+    @Transactional
+    public AccountDtoResponse actualizarCuenta(AccountDtoRequest accountDtoRequest,Long accountId) {
+        if(accountRepository.existsById(accountId)){
+            return  accountMapper.toAccountDtoResponse(accountRepository.save(accountMapper.toAccount(accountDtoRequest)));
+        }
+        throw new RuntimeException("Account not found with id: " + accountId);
+    }
 
-
-
+    @Override
+    public boolean eliminarCuenta(Long id) {
+        if(customerRepository.existsById(id)){
+            accountRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 
 
 
@@ -67,23 +82,9 @@ public class AccountServiceImpl implements AccountService  {
 
 
 
-    @Override
-    @Transactional
-    public Account actualizarCuenta(Account cuenta) {
-        if(accountRepository.existsById(cuenta.getId())){
-            return accountRepository.save(cuenta);
-        }
-        return null;
-    }
 
-    @Override
-    public boolean eliminarCuenta(Long id) {
-        if(accountRepository.existsById(id)){
-            accountRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
+
+
 
     @Override
     @Transactional

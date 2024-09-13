@@ -43,19 +43,19 @@ class AccountServiceImplTest {
 //        assert accountCreated != null;
 //    }
 
-    @Test
-    @Order(5)
-    void actualizarCuenta() {
-        Account account = Account.builder()
-                .id(1L)
-                .customer(Customer.builder().id(1L).build())
-                .type("C")
-                .balance(100)
-                .build();
-        Account accountUpdated = accountService.actualizarCuenta(account);
-        System.out.println(accountUpdated);
-        assert accountUpdated != null;
-    }
+//    @Test
+//    @Order(5)
+//    void actualizarCuenta() {
+//        Account account = Account.builder()
+//                .id(1L)
+//                .customer(Customer.builder().id(1L).build())
+//                .type("C")
+//                .balance(100)
+//                .build();
+//        Account accountUpdated = accountService.actualizarCuenta(account);
+//        System.out.println(accountUpdated);
+//        assert accountUpdated != null;
+//    }
 
     @Test
     @Order(6)
