@@ -34,7 +34,7 @@ public class AccountController {
     public AccountDtoResponse crearCuenta(@Valid @RequestBody AccountDtoRequest account) {
         return accountService.crearCuenta(account);
     }
-    
+
     @PutMapping("/{accountId}"  )
     public ResponseEntity<AccountDtoResponse> actualizarCuenta(@PathVariable Long accountId,
                                                                @Valid @RequestBody AccountDtoRequest account) {
