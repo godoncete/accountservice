@@ -2,6 +2,7 @@ package com.dxc.accountservice.controller.rest;
 
 import com.dxc.accountservice.dto.AccountDtoRequest;
 import com.dxc.accountservice.dto.AccountDtoResponse;
+import com.dxc.accountservice.dto.AddAmountBalanceDto;
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
 import com.dxc.accountservice.service.AccountService;
@@ -47,7 +48,7 @@ public class AccountController {
     }
 
     @PostMapping("/add-money")
-    public AccountDtoResponse addMoneyToBalance(@Valid @RequestBody AccountDtoRequest accountDtoRequest) {
-        return accountService.crearCuenta(accountDtoRequest);
+    public ResponseEntity<Boolean> addMoneyToBalance(@Valid @RequestBody AddAmountBalanceDto addAmountBalanceDto) {
+        return ResponseEntity.ok(accountService.addMoneyToBalance(addAmountBalanceDto));
     }
 }

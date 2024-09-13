@@ -2,6 +2,8 @@ package com.dxc.accountservice.service;
 
 import com.dxc.accountservice.dto.AccountDtoRequest;
 import com.dxc.accountservice.dto.AccountDtoResponse;
+import com.dxc.accountservice.dto.AddAmountBalanceDto;
+import com.dxc.accountservice.dto.RestMoneyBalanceDto;
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
 
@@ -14,6 +16,11 @@ public interface AccountService {
     List<AccountDtoResponse> listarCuentasCliente(Long customerId);
     AccountDtoResponse crearCuenta(AccountDtoRequest accountDtoRequest);
     AccountDtoResponse actualizarCuenta(AccountDtoRequest accountDtoRequest, Long accountId);
+    boolean addMoneyToBalance(AddAmountBalanceDto addAmountBalanceDto);
+    boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto);
+
+
+
 
     Account obtenerCuentaPorId(Long id);
 
@@ -23,9 +30,7 @@ public interface AccountService {
 
     boolean eliminarCuenta(Long id);
 
-    boolean addMoneyToBalance(Account account, int amount, Customer customer);
 
-    boolean restMoneyToBalance(Account account, int amount, Customer customer);
 
     boolean eliminarCuentasPorCliente(Customer customer);
 
