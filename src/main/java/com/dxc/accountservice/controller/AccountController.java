@@ -1,5 +1,6 @@
 package com.dxc.accountservice.controller;
 
+import com.dxc.accountservice.dto.AccountDtoRequest;
 import com.dxc.accountservice.dto.AccountDtoResponse;
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,14 +22,15 @@ public class AccountController {
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<AccountDtoResponse>> getAccountByCustomer(@PathVariable Long customerId) {
         return ResponseEntity.ok(accountService.listarCuentasCliente(customerId));
-
     }
 
-    @GetMapping("/{id}")
-    public Account obtenerCuentaPorId(@PathVariable Long id) {
-        return accountService.obtenerCuentaPorId(id);
+    @GetMapping("/{accountId}/{customerId}")
+    public AccountDtoResponse obtenerCuentaPorId(@PathVariable Long accountId, @PathVariable Long customerId) {
+        return accountService.getByAccountIdAndCustomerId(accountId,customerId);
     }
 
-
-
+    @PostMapping
+    public AccountDtoResponse crearCuenta(@Valid @RequestBody AccountDtoRequest account) {
+        return accountService.crearCuenta(account);
+    }
 }

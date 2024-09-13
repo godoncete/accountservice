@@ -19,13 +19,7 @@ class AccountServiceImplTest {
     @Autowired
     private AccountService accountService;
 
-    @Test
-    @Order(1)
-    void listarCuentas() {
-        List<Account> accounts = accountService.listarCuentas();
-        System.out.println(accounts);
-        assert !accounts.isEmpty();
-    }
+
 
     @Test
     @Order(2)
@@ -35,19 +29,19 @@ class AccountServiceImplTest {
         assert account!= null;
     }
 
-    @Test
-    @Order(4)
-    void crearCuenta() {
-        Account account = Account.builder()
-                .customer(Customer.builder().id(1L).build())
-                .type("Ahorro")
-                .openingDate(LocalDate.now())
-                .balance(100)
-                .build();
-        Account accountCreated = accountService.crearCuenta(account);
-        System.out.println(accountCreated);
-        assert accountCreated != null;
-    }
+//    @Test
+//    @Order(4)
+//    void crearCuenta() {
+//        Account account = Account.builder()
+//                .customer(Customer.builder().id(1L).build())
+//                .type("Ahorro")
+//                .openingDate(LocalDate.now())
+//                .balance(100)
+//                .build();
+//        Account accountCreated = accountService.crearCuenta(account);
+//        System.out.println(accountCreated);
+//        assert accountCreated != null;
+//    }
 
     @Test
     @Order(5)

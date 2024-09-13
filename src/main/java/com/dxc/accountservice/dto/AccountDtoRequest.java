@@ -1,19 +1,20 @@
 package com.dxc.accountservice.dto;
 
-
+import com.dxc.accountservice.entity.Customer;
 import lombok.*;
 
 import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountDtoResponse {
+public class AccountDtoRequest {
     private Long id;
     private String type;
     private LocalDate openingDate;
     private int balance;
-    private Long customerId;
+    private CustomerDtoRequest customer;
 }

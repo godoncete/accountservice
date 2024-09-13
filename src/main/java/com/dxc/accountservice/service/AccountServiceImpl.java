@@ -1,9 +1,11 @@
 package com.dxc.accountservice.service;
 
+import com.dxc.accountservice.dto.AccountDtoRequest;
 import com.dxc.accountservice.dto.AccountDtoResponse;
 import com.dxc.accountservice.entity.Account;
 import com.dxc.accountservice.entity.Customer;
 import com.dxc.accountservice.exception.CustomerNotfoundException;
+import com.dxc.accountservice.mapper.AccountMapper;
 import com.dxc.accountservice.repository.AccountRepository;
 import com.dxc.accountservice.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +20,24 @@ public class AccountServiceImpl implements AccountService  {
 
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Autowired
     private CustomerRepository customerRepository;
 
     @Override
     public List<AccountDtoResponse> listarCuentasCliente(Long customerId){
-        Customer customer = customerRepository.findById(customerId).orElse(null);
-        if(customer != null){
-            
-            return accountRepository.findAllByCustomer(customer);
-        }
-
-        throw new CustomerNotfoundException("Customer not found with id: " + customerId);
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
+        return accountMapper.toAccountDtoResponseList(accountRepository.findAllByCustomer(customer));
     }
 
-
-
-
+    @Override
+    @Transactional
+    public AccountDtoResponse crearCuenta(AccountDtoRequest accountDtoRequest) {
+       Account cuenta  = accountMapper.toAccount(accountDtoRequest);
+       return accountMapper.toAccountDtoResponse(accountRepository.save(cuenta));
+    }
 
 
 
@@ -63,11 +65,7 @@ public class AccountServiceImpl implements AccountService  {
         return null;
     }
 
-    @Override
-    @Transactional
-    public Account crearCuenta(Account cuenta) {
-        return accountRepository.save(cuenta);
-    }
+
 
     @Override
     @Transactional
@@ -122,5 +120,15 @@ public class AccountServiceImpl implements AccountService  {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public AccountDtoResponse getByAccountIdAndCustomerId(Long accountId, Long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
+        Optional<Account> account = accountRepository.findByIdAndCustomer(accountId, customer);
+        if(account.isPresent()){
+            return accountMapper.toAccountDtoResponse(account.get());
+        }
+        throw new CustomerNotfoundException("Customer not found with id:" + customerId);
     }
 }
