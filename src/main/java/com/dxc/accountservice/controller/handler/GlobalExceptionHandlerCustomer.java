@@ -1,6 +1,6 @@
 package com.dxc.accountservice.controller.handler;
 
-
+import com.dxc.accountservice.exception.CustomerNotfoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,19 +13,16 @@ import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandlerCustomer {
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleP(ProductNotFoundException e) {
+    @ExceptionHandler(CustomerNotfoundException.class)
+    public ResponseEntity<String> handleP(CustomerNotfoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleU(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-     @ExceptionHandler(UsuarioNotFoundException.class)
-    public ResponseEntity<String> handleU(UsuarioNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
