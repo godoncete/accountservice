@@ -15,7 +15,7 @@ public interface AccountService {
     AccountDtoResponse crearCuenta(AccountDtoRequest accountDtoRequest);
     AccountDtoResponse actualizarCuenta(AccountDtoRequest accountDtoRequest, Long accountId);
     boolean addMoneyToBalance(AddAmountBalanceDto addAmountBalanceDto);
-    boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto);
+    boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto,boolean allAccounts);
     String comprobarPrestamo(Long customerId,Integer monto);
 
     String eliminarCuentasPorCliente(Long id);

@@ -65,10 +65,11 @@ public class AccountController {
     public ResponseEntity<Boolean> addMoneyToBalance(@Valid @RequestBody AddAmountBalanceDto addAmountBalanceDto) {
         return ResponseEntity.ok(accountService.addMoneyToBalance(addAmountBalanceDto));
     }
-    @Operation(summary = "Retirar dinero de la cuenta de un cliente"  )
+    @Operation(summary = "Retirar dinero de la cuenta de un cliente. allAccounts en true eso para retirar el monto de todas las cuentas"  )
     @PostMapping("/rest-money")
-    public ResponseEntity<Boolean> addMoneyToBalance(@Valid @RequestBody RestMoneyBalanceDto restMoneyBalanceDto) {
-        return ResponseEntity.ok(accountService.restMoneyToBalance(restMoneyBalanceDto));
+    public ResponseEntity<Boolean> addMoneyToBalance(@Valid @RequestBody RestMoneyBalanceDto restMoneyBalanceDto,
+                                                     @RequestParam(required = false) boolean allAccounts) {
+        return ResponseEntity.ok(accountService.restMoneyToBalance(restMoneyBalanceDto, allAccounts));
     }
 
 

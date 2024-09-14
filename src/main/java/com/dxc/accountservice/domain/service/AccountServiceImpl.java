@@ -96,15 +96,16 @@ public class AccountServiceImpl implements AccountService  {
 
     @Override
     @Transactional
-    public boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto) {
-        Account account = accountRepository.findById(restMoneyBalanceDto.getAccountId()).orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + restMoneyBalanceDto.getAccountId()  ));
+    public boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto,boolean allAccounts) {
+        Customer customer=customerRepository.findById(restMoneyBalanceDto.getCustomerId()).orElseThrow(() -> new CustomerNotfoundException("Customer not found with id: " + restMoneyBalanceDto.getCustomerId()  ));
+        if(allAccounts){
+             return accountRepository.restMoneyAllAccount(customer,restMoneyBalanceDto.getAmount());
+        }
+         Account account = accountRepository.findById(restMoneyBalanceDto.getAccountId()).orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + restMoneyBalanceDto.getAccountId()  ));
         if(account != null && account.getBalance() >= restMoneyBalanceDto.getAmount() ){
-            if(customerRepository.existsById(restMoneyBalanceDto.getCustomerId())){
                     account.setBalance(account.getBalance() - restMoneyBalanceDto.getAmount());
                     accountRepository.save(account);
                     return true;
-            }
-            throw new CustomerNotfoundException( "Customer not found with id: " + restMoneyBalanceDto.getCustomerId()  );
         }
         throw new InsufficientException("Insufficient balance in account with id: " + restMoneyBalanceDto.getAccountId());
     }
