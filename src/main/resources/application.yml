@@ -1,3 +1,4 @@
+#  swagger URL = http://localhost:8080/swagger-ui/
 spring:
   application.name: accountservice
   profiles.active: dev
@@ -24,7 +25,7 @@ spring:
   mvc.pathmatch.matching-strategy: ant-path-matcher
 
 server:
-  port: 9900
+  port: 8080
 
 #debug: true
 logging:

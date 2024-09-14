@@ -1,6 +1,7 @@
 package com.dxc.accountservice.domain.dto;
 
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.*;
 
 import java.time.LocalDate;

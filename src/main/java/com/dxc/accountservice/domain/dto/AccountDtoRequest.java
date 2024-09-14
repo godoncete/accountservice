@@ -1,6 +1,7 @@
 package com.dxc.accountservice.domain.dto;
 
 import com.dxc.accountservice.constraints.TypeAccount;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.*;
 
 
