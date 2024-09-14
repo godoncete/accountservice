@@ -64,14 +64,18 @@ public class AccountServiceImpl implements AccountService  {
     }
 
     @Override
-    public boolean eliminarCuenta(Long customerId) {
+    public String eliminarCuenta(Long customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
-        if(customer!= null){
+//        if(customer!= null){
             List<Account> accounts = accountRepository.findAllByCustomer(customer);
+            if(accounts.isEmpty()){
+                return "El cliente no tiene cuentas";
+            }
             accountRepository.deleteAll(accounts);
-            return true;
-        }
-        return false;
+            return "Se han eliminado todas las cuentas del cliente";
+//            return true;
+//        }
+//        return false;
     }
 
     @Override
@@ -119,14 +123,14 @@ public class AccountServiceImpl implements AccountService  {
 
 
 
-    @Override
-    public boolean eliminarCuentasPorCliente(Customer customer) {
-        List<Account> accounts = accountRepository.findAllByCustomer(customer);
-        if(!accounts.isEmpty()){
-            accountRepository.deleteAll(accounts);
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean eliminarCuentasPorCliente(Customer customer) {
+//        List<Account> accounts = accountRepository.findAllByCustomer(customer);
+//        if(!accounts.isEmpty()){
+//            accountRepository.deleteAll(accounts);
+//            return true;
+//        }
+//        return false;
+//    }
 
 }

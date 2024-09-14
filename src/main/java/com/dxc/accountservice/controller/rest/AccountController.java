@@ -17,19 +17,19 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping("/account")
 @Validated
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/customer/{customerId}")
+    @GetMapping(path = "/customer/{customerId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<AccountDtoResponse>> getAccountByCustomer(@Positive @PathVariable Long customerId) {
         return ResponseEntity.ok(accountService.listarCuentasCliente(customerId));
     }
 
-    @GetMapping("/{accountId}/{customerId}")
+    @GetMapping(path = "/{accountId}/{customerId}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<AccountDtoResponse> obtenerCuentaPorId(@Positive @PathVariable Long accountId, @Positive @PathVariable Long customerId) {
         return ResponseEntity.ok(accountService.getByAccountIdAndCustomerId(accountId,customerId));
     }
@@ -46,7 +46,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<Boolean> eliminarCuenta(@PathVariable Long customerId) {
+    public ResponseEntity<String> eliminarCuenta(@PathVariable Long customerId) {
         return  ResponseEntity.ok(accountService.eliminarCuenta(customerId));
     }
 
@@ -59,7 +59,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.restMoneyToBalance(restMoneyBalanceDto));
     }
 
-    @GetMapping("/comprobar-prestamo/{customerId}/{monto}")
+    @GetMapping(path = "/comprobar-prestamo/{customerId}/{monto}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> comprobarPrestamo(@Positive @PathVariable Long customerId,@Positive @PathVariable Integer monto) {
         return ResponseEntity.ok(accountService.comprobarPrestamo(customerId,monto));
     }
