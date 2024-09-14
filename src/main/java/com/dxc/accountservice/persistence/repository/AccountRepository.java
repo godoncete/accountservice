@@ -4,6 +4,7 @@ import com.dxc.accountservice.exception.InsufficientException;
 import com.dxc.accountservice.persistence.entity.Account;
 import com.dxc.accountservice.persistence.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findAllByCustomer(Customer customer);
     Optional<Account> findByIdAndCustomer(Long accountId, Customer customer);
 
+    @Transactional
     default boolean restMoneyAllAccount(Customer customer, Integer amount) {
         List<Account> accounts = this.findAllByCustomer(customer);
         if(!accounts.isEmpty()){
