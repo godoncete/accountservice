@@ -1,5 +1,6 @@
 package com.dxc.accountservice.dto;
 
+import com.dxc.accountservice.constraints.TypeAccount;
 import lombok.*;
 
 
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 public class AccountDtoRequest {
     @NotBlank
     @NotNull
+    @TypeAccount
     private String type;
     @NotNull
     private LocalDate openingDate;
