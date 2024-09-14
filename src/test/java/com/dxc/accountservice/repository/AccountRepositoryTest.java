@@ -1,7 +1,8 @@
 package com.dxc.accountservice.repository;
 
-import com.dxc.accountservice.entity.Account;
-import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.persistence.entity.Account;
+import com.dxc.accountservice.persistence.entity.Customer;
+import com.dxc.accountservice.persistence.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

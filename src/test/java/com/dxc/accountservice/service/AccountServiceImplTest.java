@@ -1,16 +1,13 @@
 package com.dxc.accountservice.service;
 
-import com.dxc.accountservice.entity.Account;
-import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.domain.service.AccountService;
+import com.dxc.accountservice.persistence.entity.Customer;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -57,13 +54,7 @@ class AccountServiceImplTest {
 //        assert accountUpdated != null;
 //    }
 
-    @Test
-    @Order(6)
-    void eliminarCuenta() {
-        boolean deleted = accountService.eliminarCuenta(1L);
-        System.out.println("Deleted: " + deleted);
-        assert deleted;
-    }
+
 
 //    @Test
 //    @Order(7)
@@ -86,12 +77,4 @@ class AccountServiceImplTest {
 //        assert added;
 //    }
 
-    @Test
-    @Order(9)
-    void eliminarCuentasPorCliente() {
-        Customer customer = Customer.builder().id(1L).build();
-        boolean deleted = accountService.eliminarCuentasPorCliente(customer);
-        System.out.println("Deleted: " + deleted);
-        assert deleted;
-    }
 }

@@ -1,4 +1,4 @@
-package com.dxc.accountservice.entity;
+package com.dxc.accountservice.persistence.entity;
 
 import lombok.*;
 

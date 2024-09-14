@@ -1,4 +1,4 @@
-package com.dxc.accountservice.dto;
+package com.dxc.accountservice.domain.dto;
 
 import com.dxc.accountservice.constraints.TypeAccount;
 import lombok.*;
@@ -27,5 +27,5 @@ public class AccountDtoRequest {
     @Max(Integer.MAX_VALUE)
     private int balance;
     @NotNull
-    private CustomerDtoRequest customer;
+    private Long customerId;
 }

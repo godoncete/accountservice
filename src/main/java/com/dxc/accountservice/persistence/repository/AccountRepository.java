@@ -1,7 +1,7 @@
-package com.dxc.accountservice.repository;
+package com.dxc.accountservice.persistence.repository;
 
-import com.dxc.accountservice.entity.Account;
-import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.persistence.entity.Account;
+import com.dxc.accountservice.persistence.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

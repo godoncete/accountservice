@@ -1,17 +1,17 @@
-package com.dxc.accountservice.service;
+package com.dxc.accountservice.domain.service;
 
-import com.dxc.accountservice.dto.AccountDtoRequest;
-import com.dxc.accountservice.dto.AccountDtoResponse;
-import com.dxc.accountservice.dto.AddAmountBalanceDto;
-import com.dxc.accountservice.dto.RestMoneyBalanceDto;
-import com.dxc.accountservice.entity.Account;
-import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.domain.dto.AccountDtoRequest;
+import com.dxc.accountservice.domain.dto.AccountDtoResponse;
+import com.dxc.accountservice.domain.dto.RestMoneyBalanceDto;
+import com.dxc.accountservice.domain.dto.AddAmountBalanceDto;
+import com.dxc.accountservice.persistence.entity.Account;
+import com.dxc.accountservice.persistence.entity.Customer;
 import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.exception.CustomerNotfoundException;
 import com.dxc.accountservice.exception.InsufficientException;
-import com.dxc.accountservice.mapper.AccountMapper;
-import com.dxc.accountservice.repository.AccountRepository;
-import com.dxc.accountservice.repository.CustomerRepository;
+import com.dxc.accountservice.persistence.mapper.AccountMapper;
+import com.dxc.accountservice.persistence.repository.AccountRepository;
+import com.dxc.accountservice.persistence.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +49,11 @@ public class AccountServiceImpl implements AccountService  {
     @Override
     @Transactional
     public AccountDtoResponse crearCuenta(AccountDtoRequest accountDtoRequest) {
-       Account cuenta  = accountMapper.toAccount(accountDtoRequest);
-       customerRepository.findById(accountDtoRequest.getCustomer().getId())
-               .orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + accountDtoRequest.getCustomer().getId()));
-           return accountMapper.toAccountDtoResponse(accountRepository.save(cuenta));
+       Account account  = accountMapper.toAccount(accountDtoRequest);
+       Customer customer = customerRepository.findById(accountDtoRequest.getCustomerId())
+               .orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + accountDtoRequest.getCustomerId()));
+       account.setCustomer(customer);
+           return accountMapper.toAccountDtoResponse(accountRepository.save(account));
     }
     @Override
     @Transactional
@@ -64,7 +65,7 @@ public class AccountServiceImpl implements AccountService  {
     }
 
     @Override
-    public String eliminarCuenta(Long customerId) {
+    public String eliminarCuentasPorCliente(Long customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
 //        if(customer!= null){
             List<Account> accounts = accountRepository.findAllByCustomer(customer);
@@ -120,17 +121,5 @@ public class AccountServiceImpl implements AccountService  {
 
         return "El cliente " + customer.getName() + " NO puede solicitar el prestamo";
     }
-
-
-
-//    @Override
-//    public boolean eliminarCuentasPorCliente(Customer customer) {
-//        List<Account> accounts = accountRepository.findAllByCustomer(customer);
-//        if(!accounts.isEmpty()){
-//            accountRepository.deleteAll(accounts);
-//            return true;
-//        }
-//        return false;
-//    }
 
 }

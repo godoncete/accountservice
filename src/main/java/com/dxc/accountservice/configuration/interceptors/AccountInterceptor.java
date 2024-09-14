@@ -1,4 +1,4 @@
-package com.dxc.accountservice.interceptors;
+package com.dxc.accountservice.configuration.interceptors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

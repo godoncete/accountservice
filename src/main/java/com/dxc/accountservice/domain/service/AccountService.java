@@ -1,11 +1,9 @@
-package com.dxc.accountservice.service;
+package com.dxc.accountservice.domain.service;
 
-import com.dxc.accountservice.dto.AccountDtoRequest;
-import com.dxc.accountservice.dto.AccountDtoResponse;
-import com.dxc.accountservice.dto.AddAmountBalanceDto;
-import com.dxc.accountservice.dto.RestMoneyBalanceDto;
-import com.dxc.accountservice.entity.Account;
-import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.domain.dto.AccountDtoRequest;
+import com.dxc.accountservice.domain.dto.AccountDtoResponse;
+import com.dxc.accountservice.domain.dto.AddAmountBalanceDto;
+import com.dxc.accountservice.domain.dto.RestMoneyBalanceDto;
 
 import java.util.List;
 
@@ -20,9 +18,6 @@ public interface AccountService {
     boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto);
     String comprobarPrestamo(Long customerId,Integer monto);
 
-    String eliminarCuenta(Long id);
-
-//    boolean eliminarCuentasPorCliente(Customer customer);
-
+    String eliminarCuentasPorCliente(Long id);
 
 }

@@ -1,4 +1,4 @@
-package com.dxc.accountservice.dto;
+package com.dxc.accountservice.domain.dto;
 
 import lombok.*;
 

@@ -1,6 +1,6 @@
-package com.dxc.accountservice.repository;
+package com.dxc.accountservice.persistence.repository;
 
-import com.dxc.accountservice.entity.Customer;
+import com.dxc.accountservice.persistence.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
