@@ -20,15 +20,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
         if(!accounts.isEmpty()){
             Integer totalBalance = accounts.stream().mapToInt(Account::getBalance).sum();
             if(totalBalance >= amount){
-                 Integer amountRest = amount;
-                System.out.println(amountRest);
+               Integer  amountRest = amount;
+                Account accountWithBalanceBiggerThanAmount= accounts.stream().filter(a -> a.getBalance() >= amount).findFirst().orElse(null);
+                if(accountWithBalanceBiggerThanAmount == null) {
                  for (Account account : accounts) {
-                     System.out.println(account);
-                     if(account.getBalance() >= amountRest) {
-                         account.setBalance(account.getBalance() - amountRest);
-                         this.save(account);
-                         break;
-                     }
                      amountRest = amountRest - account.getBalance();
                      account.setBalance(0);
                      this.save(account);
@@ -37,6 +32,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
                      }
                  }
                  return true;
+                 }
+                accountWithBalanceBiggerThanAmount.setBalance(accountWithBalanceBiggerThanAmount.getBalance() - amountRest);
+                this.save(accountWithBalanceBiggerThanAmount);
+                return true;
             }
             throw new InsufficientException("Insufficient balance in all account with client id: " +  customer.getId());
         }
