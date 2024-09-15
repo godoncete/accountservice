@@ -69,6 +69,7 @@ public class AccountController {
     @PostMapping("/rest-money")
     public ResponseEntity<Boolean> addMoneyToBalance(@Valid @RequestBody RestMoneyBalanceDto restMoneyBalanceDto,
                                                      @RequestParam(required = false) boolean allAccounts) {
+        allAccounts=true;
         return ResponseEntity.ok(accountService.restMoneyToBalance(restMoneyBalanceDto, allAccounts));
     }
 

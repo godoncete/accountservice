@@ -99,6 +99,7 @@ public class AccountServiceImpl implements AccountService  {
     public boolean restMoneyToBalance(RestMoneyBalanceDto restMoneyBalanceDto,boolean allAccounts) {
         Customer customer=customerRepository.findById(restMoneyBalanceDto.getCustomerId()).orElseThrow(() -> new CustomerNotfoundException("Customer not found with id: " + restMoneyBalanceDto.getCustomerId()  ));
         if(allAccounts){
+            System.out.println("*************************************************************************************************************************************");
              return accountRepository.restMoneyAllAccount(customer,restMoneyBalanceDto.getAmount());
         }
          Account account = accountRepository.findById(restMoneyBalanceDto.getAccountId()).orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + restMoneyBalanceDto.getAccountId()  ));
