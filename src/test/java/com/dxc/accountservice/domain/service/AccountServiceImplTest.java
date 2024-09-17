@@ -7,18 +7,31 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccountServiceImplTest {
 
     @Test
-    void listarCuentasCliente() {
+    void givenCostumeId_whenListarCuentasCliente_thenAccountListNotNull() {
     }
 
     @Test
-    void getByAccountIdAndCustomerId() {
+    void givenCostumerId_whenIdNotExist_thenCostumerNotFoundException() {
+    }
+    @Test
+    void givenAccountIdAndCustomerId_whenGetByAccountIdAndCustomerId_thenAccountIsNotNull() {
+    }
+    @Test
+    void givenAccountIdAndCustomerId_whenGetByAccountIdNotExistAndCustomerId_thenAccountNotFoundException(){
+
     }
 
     @Test
-    void crearCuenta() {
+    void givenOneAccount_whenCrearCuenta_thenAccountCreated() {
+    }
+    @Test
+    void givenOneAccount_whenInvalidAccount_thenMethodArgumentNotValidException() {
     }
 
     @Test
-    void restMoneyToBalance() {
+    void givenAccountAndBalance_whenRestMoneyToBalance_thenTrue() {
+    }
+    @Test
+    void givenAccountAndBalance_whenRestInsuficientMoneyToBalance_thenInsuficientBalanceException() {
     }
 }
