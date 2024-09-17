@@ -1,10 +1,36 @@
 package com.dxc.accountservice.persistence.repository;
 
+import com.dxc.accountservice.exception.AccountNotFoundException;
+import com.dxc.accountservice.persistence.entity.Account;
+import com.dxc.accountservice.persistence.entity.Customer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+//@ExtendWith(SpringExtension.class)
+@DataJpaTest()
+//@ComponentScan(basePackages = {"com.dxc.accountservice.persistence.repository"})
+//@AutoConfigureTestEntityManager
+//@ActiveProfiles("dev")
 class AccountRepositoryTest {
+
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Test
     void givenOneCustomer_whenFindAllByCustomer_thenIsNotNull() {
@@ -14,10 +40,42 @@ class AccountRepositoryTest {
     void givenOneCustomer_whenFindAllByCustomerNotExist_ThenCustomerNotFoundException() {
     }
      @Test
-    void givenAccountIdAndCustumer_whenFindByIdAndCustomer_thenOneAccount() {
+    void givenAccountIdAndCustomer_whenFindByIdAndCustomer_thenOneAccount() {
+        Customer customer = Customer.builder().email("email@email.com").name("test").build();
+        customerRepository.save(customer);
+        Account account = Account.builder()
+                .balance(100)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+         accountRepository.save(account);
+
+        Account findAccount = accountRepository.findByIdAndCustomer(1L,customer).get();
+
+        assertThat(findAccount).isNotNull().extracting(Account::getBalance).isEqualTo(100);
     }
+
      @Test
-    void givenAccountIdAndCustumer_whenFindByIdNotExistAndCustomer_thenAccountNotFoundException() {
+    void givenAccountIdAndCustomer_whenFindByIdNotExistAndCustomer_thenAccountNotFoundException() {
+                Customer customer = Customer.builder().id(1L).email("email@email.com").name("test").build();
+        customerRepository.save(customer);
+        Account account = Account.builder()
+                .balance(100)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+         accountRepository.save(account);
+
+         Account findAccount = accountRepository.findByIdAndCustomer(2L,customer).get();
+
+         Exception exception = assertThrows(AccountNotFoundException.class, () -> {
+           accountRepository.findByIdAndCustomer(1L,customer);
+        });
+
+         assertEquals("this account does not exist for customer with id: 1", exception.getMessage());
+
     }
 
     @Test

@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService  {
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
         return accountMapper.toAccountDtoResponseList(accountRepository.findAllByCustomer(customer));
     }
-       @Override
+    @Override
     public AccountDtoResponse getByAccountIdAndCustomerId(Long accountId, Long customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotfoundException("Customer not found with id: " + customerId));
         Optional<Account> account = accountRepository.findByIdAndCustomer(accountId, customer);
