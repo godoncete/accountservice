@@ -2,6 +2,7 @@ package com.dxc.accountservice.controller.rest;
 
 import com.dxc.accountservice.domain.dto.AccountDtoResponse;
 import com.dxc.accountservice.domain.service.AccountService;
+import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.persistence.entity.Customer;
 import com.dxc.accountservice.persistence.mapper.AccountMapper;
 import com.dxc.accountservice.persistence.repository.AccountRepository;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDate;
 
@@ -30,6 +32,12 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+
+
+
+
 
 //@WebMvcTest(SpringExtension.class)
 //@ExtendWith(MockitoExtension.class)
@@ -56,8 +64,7 @@ class AccountControllerTest {
         accDto = AccountDtoResponse.builder()
                 .id(1L).balance(400).openingDate(LocalDate.now()).type("Personal").customerId(1L)
                 .build();
-        Mockito.when(accountService.getByAccountIdAndCustomerId(1L,1L))
-            .thenReturn(accDto);
+
     }
 
     @Test
@@ -71,6 +78,8 @@ class AccountControllerTest {
 
     @Test
     void givenAccountIdAndCostumerId_whenObtenerCuentaPorId_thenOneAccount() throws Exception{
+            Mockito.when(accountService.getByAccountIdAndCustomerId(1L,1L))
+            .thenReturn(accDto);
             MvcResult fakeaccount = mockMvc.perform(
                         get("/account/1/1")
                         .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -82,9 +91,20 @@ class AccountControllerTest {
                     .andReturn();
     }
     @Test
-    void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() {
+    void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() throws Exception{
+        Mockito.when(accountService.getByAccountIdAndCustomerId(2L,1L))
+                .thenThrow(new AccountNotFoundException("Account not found"));
 
+            MvcResult fakeaccount = mockMvc.perform(
+                        get("/account/2/1")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isNotFound())
+//                    .andExpect(jsonPath("$.message").value("Account not found"))
+                    .andReturn();
     }
+
     @Test
     void givenAccount_whenCrearCuenta_thenAccountCreated() {
     }
