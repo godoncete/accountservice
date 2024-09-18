@@ -2,6 +2,7 @@ package com.dxc.accountservice.controller.rest;
 
 import com.dxc.accountservice.domain.dto.AccountDtoRequest;
 import com.dxc.accountservice.domain.dto.AccountDtoResponse;
+import com.dxc.accountservice.domain.dto.RestMoneyBalanceDto;
 import com.dxc.accountservice.domain.service.AccountService;
 import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.persistence.entity.Account;
@@ -39,8 +40,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -52,14 +51,14 @@ class AccountControllerTest_WebMvc {
     @MockBean
     AccountService accountService;
     @MockBean
-    AccountMapper accountMapper ;
+    AccountMapper accountMapper;
 
     private AccountDtoResponse accDto;
     private AccountDtoRequest accountDtoRequest;
     private Customer customer;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         accDto = AccountDtoResponse.builder()
                 .id(1L).balance(400).openingDate(LocalDate.now()).type("Personal").customerId(1L)
                 .build();
@@ -73,41 +72,42 @@ class AccountControllerTest_WebMvc {
     void givenCostumerId_whenGetAccountByCustomer_thenAccountList() {
 
     }
+
     @Test
-    void givenCostumerId_whenGetAccountByCustomerNotExist_thenCustomerNotFoundException()
-    {
+    void givenCostumerId_whenGetAccountByCustomerNotExist_thenCustomerNotFoundException() {
     }
 
     @Test
-    void givenAccountIdAndCostumerId_whenObtenerCuentaPorId_thenOneAccount() throws Exception{
-        Mockito.when(accountService.getByAccountIdAndCustomerId(1L,1L))
+    void givenAccountIdAndCostumerId_whenObtenerCuentaPorId_thenOneAccount() throws Exception {
+        Mockito.when(accountService.getByAccountIdAndCustomerId(1L, 1L))
                 .thenReturn(accDto);
-            MvcResult fakeaccount = mockMvc.perform(
+        MvcResult fakeaccount = mockMvc.perform(
                         get("/account/1/1")
-                        .accept(MediaType.APPLICATION_JSON_VALUE)
-                    )
-                    .andDo(MockMvcResultHandlers.print())
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
-                    .andExpect(jsonPath("$.type").exists())
-                    .andExpect(jsonPath("$.id", is(greaterThanOrEqualTo(1))))
-                    .andExpect(jsonPath("$.balance", is(greaterThanOrEqualTo(400))))
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.type").exists())
+                .andExpect(jsonPath("$.id", is(greaterThanOrEqualTo(1))))
+                .andExpect(jsonPath("$.balance", is(greaterThanOrEqualTo(400))))
 //                    .andExpect(jsonPath("$.type", hasItem("Personal")))
-                    .andReturn();
+                .andReturn();
     }
+
     @Test
-    void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() throws Exception{
-        Mockito.when(accountService.getByAccountIdAndCustomerId(2L,1L))
+    void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() throws Exception {
+        Mockito.when(accountService.getByAccountIdAndCustomerId(2L, 1L))
                 .thenThrow(new AccountNotFoundException("Account not found"));
 
-            MvcResult fakeaccount = mockMvc.perform(
+        MvcResult fakeaccount = mockMvc.perform(
                         get("/account/2/1")
-                        .accept(MediaType.APPLICATION_JSON_VALUE)
-                    )
-                    .andDo(MockMvcResultHandlers.print())
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message").value("Account not found"))
-                    .andReturn();
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Account not found"))
+                .andReturn();
     }
 
     @Test
@@ -115,37 +115,43 @@ class AccountControllerTest_WebMvc {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         Mockito.when(accountService.crearCuenta(accountDtoRequest))
-               .thenReturn(accDto);
+                .thenReturn(accDto);
         mockMvc.perform(post("/account")
-                               .contentType(MediaType.APPLICATION_JSON_VALUE)
-                               .content(mapper.writeValueAsString(accountDtoRequest))
-                               .accept(MediaType.APPLICATION_JSON_VALUE)
-                    )
-                   .andDo(MockMvcResultHandlers.print())
-                   .andExpect(status().isCreated());
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(mapper.writeValueAsString(accountDtoRequest))
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated());
     }
 
     @Test
-    void givenAccount_whenInvalidAccount_thenMethodArgumentNotValidException()throws Exception  {
+    void givenAccount_whenInvalidAccount_thenMethodArgumentNotValidException() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         accountDtoRequest.setBalance(-100);
         Mockito.when(accountService.crearCuenta(accountDtoRequest))
-               .thenThrow(RuntimeException.class);
+                .thenThrow(RuntimeException.class);
         mockMvc.perform(post("/account")
-                               .contentType(MediaType.APPLICATION_JSON_VALUE)
-                               .content(mapper.writeValueAsString(accountDtoRequest))
-                               .accept(MediaType.APPLICATION_JSON_VALUE)
-                    )
-                   .andDo(MockMvcResultHandlers.print())
-                   .andExpect(status().isBadRequest());
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(mapper.writeValueAsString(accountDtoRequest))
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     void givenAccountAndBalance_whenRestMoneyToBalance_thenTrue() {
+
+        RestMoneyBalanceDto restMoneyBalanceDto = new RestMoneyBalanceDto(2000, 1L, 1L);
+//        Mockito.when(accountService.restMoneyToBalance(restMoneyBalanceDto, true)).thenReturn(accDto);
+
     }
 
     @Test
     void givenAccountAndBalance_whenRestInsuficientMoneyToBalance_thenInsufficientBalanceException() {
+
+
     }
 }

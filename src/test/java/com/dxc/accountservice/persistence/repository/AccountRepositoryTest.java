@@ -1,6 +1,7 @@
 package com.dxc.accountservice.persistence.repository;
 
 import com.dxc.accountservice.exception.AccountNotFoundException;
+import com.dxc.accountservice.exception.InsufficientException;
 import com.dxc.accountservice.persistence.entity.Account;
 import com.dxc.accountservice.persistence.entity.Customer;
 import org.junit.jupiter.api.Test;
@@ -15,17 +16,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 import static org.junit.jupiter.api.Assertions.*;
 
-//@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest()
-//@ComponentScan(basePackages = {"com.dxc.accountservice.persistence.repository"})
-//@AutoConfigureTestEntityManager
+@ComponentScan(basePackages = {"com.dxc.accountservice.persistence.repository"})
+@AutoConfigureTestEntityManager
 //@ActiveProfiles("dev")
 class AccountRepositoryTest {
 
@@ -73,6 +72,7 @@ class AccountRepositoryTest {
 
         assertTrue(accounts.isEmpty());
     }
+
      @Test
     void givenAccountIdAndCustomer_whenFindByIdAndCustomer_thenOneAccount() {
         Customer customer = Customer.builder().email("email@email.com").name("test").build();
@@ -114,9 +114,53 @@ class AccountRepositoryTest {
 
     @Test
     void givenOneCostumerAndAmount_whenRestMoneyAllAccount_thenIsTrue() {
+
+        Customer customer = new Customer(1L, "Laura", "laura@dxc.com");
+        Account account = Account.builder()
+                .balance(1000)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+
+        Account account2 = Account.builder()
+                .balance(100)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+
+        customerRepository.save(customer);
+        accountRepository.save(account);
+        accountRepository.save(account2);
+        assertTrue(accountRepository.restMoneyAllAccount(customer, 1000));
+
     }
 
     @Test
     void givenOneCostumerAndAmount_whenInsufficientBalance_thenInsufficientBalanceException() {
+
+        Customer customer = new Customer(1L, "Laura", "laura@dxc.com");
+        Account account = Account.builder()
+                .balance(1000)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+
+        Account account2 = Account.builder()
+                .balance(100)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+
+        customerRepository.save(customer);
+        accountRepository.save(account);
+        accountRepository.save(account2);
+        assertThrows(InsufficientException.class, () -> {
+            accountRepository.restMoneyAllAccount(customer, 2000);
+        });
+
     }
 }
