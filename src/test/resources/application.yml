@@ -2,6 +2,18 @@ spring:
   application:
     name: accountservice
   profiles.active: testing
+
+server:
+  error:
+     include-message: always
+     include-binding-errors: always
+     include-stacktrace: on-param
+     include-exception: false
+
+---
+
+spring:
+  config.activate.on-profile: testing
   sql.init.mode: never
   devtools.restart.enabled: true
   datasource:
@@ -19,6 +31,7 @@ spring:
   h2:
     console.enabled: true
     console.path: /h2-ui
+  mvc.pathmatch.matching-strategy: ant-path-matcher
 
 server:
   port: 8080
@@ -27,14 +40,3 @@ server:
 products.openapi:
     dev-url: "http://localhost:9090"
     prod-url: "https://localhost:8443"
-
----
-spring:
-  config.activate.on-profile: testing
-
-server:
-  error:
-     include-message: always
-     include-binding-errors: always
-     include-stacktrace: on-param
-     include-exception: false
