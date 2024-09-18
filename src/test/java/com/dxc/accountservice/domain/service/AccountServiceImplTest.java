@@ -2,6 +2,7 @@ package com.dxc.accountservice.domain.service;
 
 import com.dxc.accountservice.domain.dto.AccountDtoResponse;
 import com.dxc.accountservice.exception.AccountNotFoundException;
+import com.dxc.accountservice.exception.CustomerNotfoundException;
 import com.dxc.accountservice.persistence.entity.Account;
 import com.dxc.accountservice.persistence.entity.Customer;
 import com.dxc.accountservice.persistence.mapper.AccountMapper;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,6 +54,11 @@ class AccountServiceImplTest {
         account = Account.builder()
                 .id(1L).balance(100).type("Company").openingDate(LocalDate.now())
                 .customer(customer).build();
+
+        List<AccountDtoResponse> accounts = List.of(new AccountDtoResponse(1L,"Company",LocalDate.now(),100,1L));
+        Mockito.when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
+        Mockito.when(accountMapper.toAccountDtoResponseList(accountRepository.findAllByCustomer(customer))).thenReturn(accounts);
+
     }
 
     @MockBean
@@ -65,10 +72,23 @@ class AccountServiceImplTest {
 
     @Test
     void givenCostumeId_whenListarCuentasCliente_thenAccountListNotNull() {
+        Long customerId = 1L;
+        List<AccountDtoResponse> accounts = accountService.listarCuentasCliente(customerId);
+        assertThat(accounts).isNotNull();
+        assertThat(accounts.size()).isGreaterThan(0);
+        assertThat(accounts.get(0).getCustomerId()).isEqualTo(customerId);
+        assertThat(accounts.get(0).getBalance()).isEqualTo(100);
+        assertThat(accounts.get(0).getType()).isEqualTo("Company");
+
+
     }
 
     @Test
     void givenCostumerId_whenIdNotExist_thenCostumerNotFoundException() {
+        Mockito.when(customerRepository.findById(100L)).thenThrow(CustomerNotfoundException.class);
+        assertThrows(CustomerNotfoundException.class,()->{
+            accountService.listarCuentasCliente(100L);
+        });
     }
     @Test
     void givenAccountIdAndCustomerId_whenGetByAccountIdAndCustomerId_thenAccountIsNotNull() {
