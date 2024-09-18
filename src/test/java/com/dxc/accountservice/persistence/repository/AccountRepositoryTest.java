@@ -1,6 +1,7 @@
 package com.dxc.accountservice.persistence.repository;
 
 import com.dxc.accountservice.exception.AccountNotFoundException;
+import com.dxc.accountservice.exception.CustomerNotfoundException;
 import com.dxc.accountservice.persistence.entity.Account;
 import com.dxc.accountservice.persistence.entity.Customer;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class AccountRepositoryTest {
     }
 
      @Test
-    void givenOneCustomer_whenFindAllByCustomerNotExist_ThenCustomerNotFoundException() {
+    void givenOneCustomer_whenFindAllByCustomerNotExist_ThenListEmpty() {
         Customer customer = new Customer(1L, "fakeCustomer", "j@j.com");
         customerRepository.save(customer);
         Account account = Account.builder()
@@ -72,6 +73,7 @@ class AccountRepositoryTest {
                 .isEqualTo(0);
 
         assertTrue(accounts.isEmpty());
+
     }
      @Test
     void givenAccountIdAndCustomer_whenFindByIdAndCustomer_thenOneAccount() {
