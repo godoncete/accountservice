@@ -76,12 +76,12 @@ class AccountControllerTest_MockMvc_ {
     @Test
     void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() throws Exception{
                     MvcResult fakeaccount = mockMvc.perform(
-                        get("/account/2/1")
+                        get("/account/2/9")
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message").value("Account not found"))
+                    .andExpect(content().string("Customer not found with id: 9"))
                     .andReturn();
     }
 
