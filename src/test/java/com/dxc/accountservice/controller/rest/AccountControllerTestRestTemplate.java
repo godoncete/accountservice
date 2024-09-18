@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.client.RestClientException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,13 +34,23 @@ class AccountControllerTestRestTemplate {
 
     @Test
     void givenAccountIdAndCostumerId_whenObtenerCuentaPorId_thenOneAccount() throws Exception{
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         ResponseEntity<AccountDtoResponse> response = restTemplate.getForEntity("http://localhost:" + port + "/account/1/1", AccountDtoResponse.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).isNotNull();
     }
 
     @Test
-    void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() throws Exception{
+    void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenRestClientException() throws Exception{
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        try{
+            restTemplate.getForEntity("http://localhost:" + port + "/account/1/50", AccountDtoResponse.class);
+        }
+        catch(RestClientException e){
+            assertThat(e.getMessage()).contains("Unrecognized token 'Customer'");
+        }
     }
 
     @Test
