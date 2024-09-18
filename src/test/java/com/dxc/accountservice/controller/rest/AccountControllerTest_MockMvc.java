@@ -4,15 +4,12 @@ import com.dxc.accountservice.domain.dto.AccountDtoResponse;
 import com.dxc.accountservice.domain.service.AccountService;
 import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.persistence.entity.Customer;
-import com.dxc.accountservice.persistence.mapper.AccountMapper;
 import com.dxc.accountservice.persistence.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,30 +17,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-
-
-
-
-
-//@WebMvcTest(SpringExtension.class)
-//@ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(AccountController.class)
-class AccountControllerTest {
+class AccountControllerTest_MockMvc {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,16 +62,16 @@ class AccountControllerTest {
 
     @Test
     void givenAccountIdAndCostumerId_whenObtenerCuentaPorId_thenOneAccount() throws Exception{
-            Mockito.when(accountService.getByAccountIdAndCustomerId(1L,1L))
-            .thenReturn(accDto);
+        Mockito.when(accountService.getByAccountIdAndCustomerId(1L,1L))
+                .thenReturn(accDto);
             MvcResult fakeaccount = mockMvc.perform(
                         get("/account/1/1")
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
-//                    .andExpect((ResultMatcher)content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
-//                    .andExpect((ResultMatcher) jsonPath("$.type", hasItem("Personal")))
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(jsonPath("$.type", hasItem("Personal")))
                     .andReturn();
     }
     @Test
