@@ -12,7 +12,6 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("classpath:data_testing.sql")
 class AccountControllerTestRestTemplate {
 
     @LocalServerPort

@@ -6,6 +6,7 @@ import com.dxc.accountservice.domain.service.AccountService;
 import com.dxc.accountservice.exception.AccountNotFoundException;
 import com.dxc.accountservice.persistence.entity.Account;
 import com.dxc.accountservice.persistence.entity.Customer;
+import com.dxc.accountservice.persistence.mapper.AccountMapper;
 import com.dxc.accountservice.persistence.repository.AccountRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
