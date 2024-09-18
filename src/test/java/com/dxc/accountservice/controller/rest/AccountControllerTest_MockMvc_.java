@@ -1,10 +1,37 @@
 package com.dxc.accountservice.controller.rest;
 
+import com.dxc.accountservice.domain.service.AccountService;
+import com.dxc.accountservice.persistence.entity.Account;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.MvcResult;
 
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+@ActiveProfiles("testing")
+@Sql(value = "classpath:data_testing.sql")
 class AccountControllerTest_MockMvc_ {
 
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private AccountService accountService;
 
     @Test
     void givenCostumerId_whenGetAccountByCustomer_thenAccountList() {
@@ -17,9 +44,31 @@ class AccountControllerTest_MockMvc_ {
 
     @Test
     void givenAccountIdAndCostumerId_whenObtenerCuentaPorId_thenOneAccount() throws Exception{
+        Account account = Account.builder().id(1L).build();
+
+        MvcResult fakeaccount = mockMvc.perform(
+                get("/account/1/1")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(jsonPath("$.type").exists())
+                    .andExpect(jsonPath("$.id", is(greaterThanOrEqualTo(1))))
+                    .andExpect(jsonPath("$.balance", is(greaterThanOrEqualTo(400))))
+                    .andReturn();
     }
+
     @Test
     void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() throws Exception{
+                    MvcResult fakeaccount = mockMvc.perform(
+                        get("/account/2/1")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value("Account not found"))
+                    .andReturn();
     }
 
     @Test
