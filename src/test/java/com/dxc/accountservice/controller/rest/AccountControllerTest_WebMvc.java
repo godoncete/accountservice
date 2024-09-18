@@ -5,6 +5,7 @@ import com.dxc.accountservice.domain.dto.AccountDtoResponse;
 import com.dxc.accountservice.domain.dto.RestMoneyBalanceDto;
 import com.dxc.accountservice.domain.service.AccountService;
 import com.dxc.accountservice.exception.AccountNotFoundException;
+import com.dxc.accountservice.exception.CustomerNotfoundException;
 import com.dxc.accountservice.persistence.entity.Account;
 import com.dxc.accountservice.persistence.entity.Customer;
 import com.dxc.accountservice.persistence.mapper.AccountMapper;
@@ -30,6 +31,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 
@@ -64,17 +67,41 @@ class AccountControllerTest_WebMvc {
                 .build();
         accountDtoRequest = AccountDtoRequest.builder()
                 .balance(400).openingDate(LocalDate.now()).type("Personal").customerId(1L).build();
-
-
-    }
-
-    @Test
-    void givenCostumerId_whenGetAccountByCustomer_thenAccountList() {
+        List<AccountDtoResponse> accounts = List.of(new AccountDtoResponse(1L,"Company",LocalDate.now(),100,1L));
+        Mockito.when(accountService.listarCuentasCliente(1L)).thenReturn(accounts);
 
     }
 
     @Test
+    void givenCostumerId_whenGetAccountByCustomer_thenAccountList() throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/account/customer/1")
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[0].balance").value(100))
+            .andExpect(jsonPath("$[0].openingDate").value(LocalDate.now().toString()))
+            .andExpect(jsonPath("$[0].type").value("Company"))
+            .andExpect(jsonPath("$[0].customerId").value(1))
+            .andReturn();
+    }
+
+    @Test
+<<<<<<< HEAD
     void givenCostumerId_whenGetAccountByCustomerNotExist_thenCustomerNotFoundException() {
+=======
+    void givenCostumerId_whenGetAccountByCustomerNotExist_thenCustomerNotFoundException() throws Exception {
+        Mockito.when(accountService.listarCuentasCliente(100L)).thenThrow(new CustomerNotfoundException("Customer not found"));
+        MvcResult result = mockMvc.perform(get("/account/customer/100")
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound())
+            //.andExpect(jsonPath("$.message").value("Customer not found"))
+            .andReturn();
+        System.out.println(result.getResponse());
+>>>>>>> feabe1464e98d08d72bbf222c5e0e510fc450f5e
     }
 
     @Test

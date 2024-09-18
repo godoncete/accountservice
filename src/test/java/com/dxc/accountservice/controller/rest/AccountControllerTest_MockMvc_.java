@@ -1,5 +1,6 @@
 package com.dxc.accountservice.controller.rest;
 
+import com.dxc.accountservice.domain.dto.AccountDtoResponse;
 import com.dxc.accountservice.domain.service.AccountService;
 import com.dxc.accountservice.persistence.entity.Account;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.time.LocalDate;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,8 +38,18 @@ class AccountControllerTest_MockMvc_ {
     private AccountService accountService;
 
     @Test
-    void givenCostumerId_whenGetAccountByCustomer_thenAccountList() {
-
+    void givenCostumerId_whenGetAccountByCustomer_thenAccountList() throws Exception {
+        MvcResult result = mockMvc.perform(get("/account/customer/1")
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$[0].id",is(greaterThanOrEqualTo(0))))
+            /*.andExpect(jsonPath("$[0].balance").value(100))
+            .andExpect(jsonPath("$[0].openingDate").value(LocalDate.now().toString()))
+            .andExpect(jsonPath("$[0].type").value("Company"))
+            .andExpect(jsonPath("$[0].customerId").value(1))*/
+            .andReturn();
     }
     @Test
     void givenCostumerId_whenGetAccountByCustomerNotExist_thenCustomerNotFoundException()
@@ -62,12 +76,12 @@ class AccountControllerTest_MockMvc_ {
     @Test
     void givenAccountIdAndCostumerId_whenCostumerIdNotExist_thenCustomerNotFoundException() throws Exception{
                     MvcResult fakeaccount = mockMvc.perform(
-                        get("/account/2/1")
+                        get("/account/2/9")
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.message").value("Account not found"))
+                    .andExpect(content().string("Customer not found with id: 9"))
                     .andReturn();
     }
 
