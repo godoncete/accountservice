@@ -16,7 +16,6 @@ import org.springframework.web.client.RestClientException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql("classpath:data_testing.sql")
 class AccountControllerTestRestTemplate {
 
     @LocalServerPort

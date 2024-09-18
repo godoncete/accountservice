@@ -14,10 +14,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 import static org.junit.jupiter.api.Assertions.*;
 
 //@ExtendWith(SpringExtension.class)
@@ -34,10 +36,42 @@ class AccountRepositoryTest {
 
     @Test
     void givenOneCustomer_whenFindAllByCustomer_thenIsNotNull() {
+        Customer customer = new Customer(1L, "fakeCustomer", "j@j.com");
+        customerRepository.save(customer);
+        Account account = Account.builder()
+                .balance(100)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+
+        accountRepository.save(account);
+        List<Account> accounts=accountRepository.findAllByCustomer(customer);
+        assertThat(accounts.size())
+                .isGreaterThan(0);
+
+        assertNotNull(accounts);
+
     }
 
      @Test
     void givenOneCustomer_whenFindAllByCustomerNotExist_ThenCustomerNotFoundException() {
+        Customer customer = new Customer(1L, "fakeCustomer", "j@j.com");
+        customerRepository.save(customer);
+        Account account = Account.builder()
+                .balance(100)
+                .type("Company")
+                .openingDate(LocalDate.now())
+                .customer(customer)
+                .build();
+
+        accountRepository.save(account);
+        List<Account> accounts=accountRepository.findAllByCustomer(new Customer(2L, "fakeCustomer", "j@j.com"));
+
+        assertThat(accounts.size())
+                .isEqualTo(0);
+
+        assertTrue(accounts.isEmpty());
     }
      @Test
     void givenAccountIdAndCustomer_whenFindByIdAndCustomer_thenOneAccount() {

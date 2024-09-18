@@ -1,7 +1,9 @@
 package com.dxc.accountservice.domain.service;
 
+import com.dxc.accountservice.domain.dto.AccountDtoRequest;
 import com.dxc.accountservice.domain.dto.AccountDtoResponse;
 import com.dxc.accountservice.exception.AccountNotFoundException;
+import com.dxc.accountservice.exception.CustomerNotfoundException;
 import com.dxc.accountservice.persistence.entity.Account;
 import com.dxc.accountservice.persistence.entity.Customer;
 import com.dxc.accountservice.persistence.mapper.AccountMapper;
@@ -16,8 +18,10 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,9 +35,20 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(SpringExtension.class)
 class AccountServiceImplTest {
 
+    @MockBean
+    CustomerRepository customerRepository;
+    @MockBean
+    AccountRepository accountRepository;
+    @MockBean
+    AccountMapper accountMapper;
+    @Autowired
+    AccountService accountService;
+
     private Customer customer;
     private AccountDtoResponse accountDto;
     private Account account;
+    private AccountDtoRequest  accountDtoRequest;
+
 
     @TestConfiguration
     static class AccountServiceConfiguration{
@@ -52,23 +67,38 @@ class AccountServiceImplTest {
         account = Account.builder()
                 .id(1L).balance(100).type("Company").openingDate(LocalDate.now())
                 .customer(customer).build();
+
+
+        List<AccountDtoResponse> accounts = List.of(new AccountDtoResponse(1L,"Company",LocalDate.now(),100,1L));
+        Mockito.when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
+        Mockito.when(accountMapper.toAccountDtoResponseList(accountRepository.findAllByCustomer(customer))).thenReturn(accounts);
+
+
+        accountDtoRequest = AccountDtoRequest.builder()
+                .customerId(1L).balance(100).type("Company").openingDate(LocalDate.now()).build();
+
     }
 
-    @MockBean
-    CustomerRepository customerRepository;
-    @MockBean
-    AccountRepository accountRepository;
-    @MockBean
-    AccountMapper accountMapper;
-    @Autowired
-    AccountService accountService;
 
     @Test
     void givenCostumeId_whenListarCuentasCliente_thenAccountListNotNull() {
+        Long customerId = 1L;
+        List<AccountDtoResponse> accounts = accountService.listarCuentasCliente(customerId);
+        assertThat(accounts).isNotNull();
+        assertThat(accounts.size()).isGreaterThan(0);
+        assertThat(accounts.get(0).getCustomerId()).isEqualTo(customerId);
+        assertThat(accounts.get(0).getBalance()).isEqualTo(100);
+        assertThat(accounts.get(0).getType()).isEqualTo("Company");
+
+
     }
 
     @Test
     void givenCostumerId_whenIdNotExist_thenCostumerNotFoundException() {
+        Mockito.when(customerRepository.findById(100L)).thenThrow(CustomerNotfoundException.class);
+        assertThrows(CustomerNotfoundException.class,()->{
+            accountService.listarCuentasCliente(100L);
+        });
     }
     @Test
     void givenAccountIdAndCustomerId_whenGetByAccountIdAndCustomerId_thenAccountIsNotNull() {
@@ -102,9 +132,25 @@ class AccountServiceImplTest {
 
     @Test
     void givenOneAccount_whenCrearCuenta_thenAccountCreated() {
+        Mockito.when(customerRepository.findById(accountDtoRequest.getCustomerId())).thenReturn(Optional.of(customer));
+         Mockito.when(accountMapper.toAccount(accountDtoRequest)).thenReturn(account);
+        Mockito.when(accountRepository.save(any(Account.class))).thenReturn(account);
+        Mockito.when(accountMapper.toAccountDtoResponse(account)).thenReturn(accountDto);
+
+        AccountDtoResponse accDto = accountService.crearCuenta(accountDtoRequest);
+
+        assertThat(accDto)
+               .isNotNull()
+               .extracting(AccountDtoResponse::getBalance,AccountDtoResponse::getType,AccountDtoResponse::getCustomerId)
+               .containsExactly(100,"Company",1L);
     }
     @Test
-    void givenOneAccount_whenInvalidAccount_thenMethodArgumentNotValidException() {
+    void givenOneAccount_whenInvalidAccount_thenCustomerNotFoundException() {
+        Mockito.when(customerRepository.findById(accountDtoRequest.getCustomerId())).thenThrow(CustomerNotfoundException.class);
+
+        assertThrows(CustomerNotfoundException.class, () -> {
+            accountService.crearCuenta(accountDtoRequest);
+        });
     }
 
     @Test
